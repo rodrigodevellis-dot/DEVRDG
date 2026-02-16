@@ -1,0 +1,7 @@
+# Dependências para extração de texto de PDFs com Document AI
+
+# Google Cloud Document AI
+google-cloud-documentai==2.27.0
+
+# Utilitários
+python-dotenv==1.0.0
