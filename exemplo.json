@@ -1,0 +1,24 @@
+[
+  {
+    "nome": "João Silva",
+    "idade": 30,
+    "email": "joao@email.com",
+    "endereco": {
+      "rua": "Rua das Flores, 123",
+      "cidade": "São Paulo",
+      "estado": "SP"
+    },
+    "telefones": ["11999990000", "1133330000"]
+  },
+  {
+    "nome": "Maria Souza",
+    "idade": 25,
+    "email": "maria@email.com",
+    "endereco": {
+      "rua": "Av. Brasil, 456",
+      "cidade": "Rio de Janeiro",
+      "estado": "RJ"
+    },
+    "telefones": ["21988880000"]
+  }
+]
