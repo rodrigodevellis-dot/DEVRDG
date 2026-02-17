@@ -1,0 +1,19 @@
+--- Registro 1 ---
+  nome: João Silva
+  idade: 30
+  email: joao@email.com
+  endereco.rua: Rua das Flores, 123
+  endereco.cidade: São Paulo
+  endereco.estado: SP
+  telefones[0]: 11999990000
+  telefones[1]: 1133330000
+
+--- Registro 2 ---
+  nome: Maria Souza
+  idade: 25
+  email: maria@email.com
+  endereco.rua: Av. Brasil, 456
+  endereco.cidade: Rio de Janeiro
+  endereco.estado: RJ
+  telefones[0]: 21988880000
+
