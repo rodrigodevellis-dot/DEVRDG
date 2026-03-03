@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Grok Pipeline Engine</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;background:#0A0A0A;color:#EEE;font-family:'Helvetica Neue',Arial,sans-serif;overflow-x:hidden}
+.bg-circle{position:fixed;width:70vw;height:70vw;background:#00D4FF;border-radius:50%;right:-15vw;bottom:-15vw;z-index:0;pointer-events:none;opacity:0.15}
+.bg-dots{position:fixed;inset:0;background-image:radial-gradient(#00D4FF 1px,transparent 1px);background-size:6px 6px;opacity:.08;pointer-events:none;z-index:1}
+header{position:relative;z-index:10;padding:18px 5vw;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #333}
+.wordmark{font-size:13px;font-weight:900;letter-spacing:6px;text-transform:uppercase;color:#FF6B00}
+.wordmark small{display:block;font-size:10px;color:#888;letter-spacing:3px;margin-top:3px}
+#btn-run{background:#FF6B00;color:#111;border:none;padding:12px 36px;font-size:12px;font-weight:900;letter-spacing:4px;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:background .2s}
+#btn-run:hover:not(:disabled){background:#FF8C00}
+#btn-run:disabled{background:#444;color:#777;cursor:default}
+.tab-bar{position:relative;z-index:2;display:flex;border-bottom:2px solid #333}
+.tab{flex:1;padding:14px 8px;border:none;cursor:pointer;text-align:left;background:transparent;border-top:4px solid transparent;transition:all .2s}
+.tab.active{background:#1A1A1A;border-top-color:#00D4FF}
+.tab.running{border-top-color:#FF4500}
+.tab.done{border-top-color:#00D4FF}
+.tab__label{font-size:9px;font-weight:900;letter-spacing:3px;text-transform:uppercase;display:block;color:#EEE}
+.tab__sub{font-size:10px;color:#888}
+.tab__dot{width:6px;height:6px;background:#00D4FF;border-radius:50%;margin-top:5px;display:none}
+.tab.done .tab__dot{display:block}
+main{position:relative;z-index:2;padding:24px 5vw 100px}
+.panel{display:none}
+.panel.active{display:block}
+textarea{width:100%;min-height:calc(100vh - 250px);background:#1A1A1A;border:3px solid #333;padding:24px;font-size:14px;font-family:inherit;font-weight:500;line-height:1.8;color:#EEE;resize:vertical;outline:none}
+textarea:focus{border-color:#00D4FF}
+.panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.tag{display:inline-block;padding:4px 12px;background:#FF6B00;color:#111;font-size:10px;font-weight:900;letter-spacing:3px;text-transform:uppercase}
+.tag.accent{background:#FF4500}
+.tag.teal{background:#00D4FF}
+.panel-sub{font-size:11px;color:#888;font-weight:500;margin-left:12px}
+.btn-ghost{background:none;border:2px solid #555;color:#EEE;font-size:10px;font-weight:900;letter-spacing:3px;padding:6px 14px;cursor:pointer;text-transform:uppercase;transition:border-color .2s}
+.btn-ghost:hover{border-color:#00D4FF}
+.result-box{white-space:pre-wrap;font-size:14px;font-family:inherit;font-weight:500;line-height:1.8;color:#EEE;background:#1A1A1A;padding:24px 28px;border-left:6px solid #333;min-height:calc(100vh - 320px);display:none}
+.result-box.teal{border-left-color:#00D4FF}
+.result-box.mono{font-family:'Courier New',monospace;font-size:13px;border-left-color:#00D4FF}
+.loading{display:none;align-items:center;gap:16px;background:#1A1A1A;border-left:6px solid #FF4500;padding:32px 24px}
+.loading.on{display:flex}
+.loading-label{font-size:12px;font-weight:900;letter-spacing:4px;text-transform:uppercase;color:#FF6B00}
+.dots{display:flex;gap:6px}
+.dot{width:10px;height:10px;background:#FF6B00;border-radius:2px;animation:pop 1s ease infinite}
+.dot:nth-child(2){animation-delay:.15s}
+.dot:nth-child(3){animation-delay:.3s}
+@keyframes pop{0%,100%{transform:scale(.6);opacity:.3}50%{transform:scale(1);opacity:1}}
+.empty{background:#1A1A1A;border-left:6px solid #444;padding:32px 24px;font-size:12px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:#666;min-height:calc(100vh - 320px)}
+.json-label{font-size:10px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:#00D4FF;margin-bottom:10px;display:none}
+#err{font-size:11px;font-weight:900;color:#FF4500;letter-spacing:2px;display:none}
+footer{position:fixed;bottom:0;left:0;right:0;padding:14px 5vw;background:#111;color:#FF6B00;display:flex;justify-content:space-between;align-items:center;z-index:10;font-size:10px;font-weight:900;letter-spacing:3px;text-transform:uppercase;border-top:2px solid #222}
+.footer-r{display:flex;align-items:center;gap:16px}
+#footer-status{color:#00D4FF}
+#btn-dl{display:none;background:#00D4FF;color:#111;border:none;padding:8px 24px;font-size:10px;font-weight:900;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:background .2s}
+#btn-dl:hover{background:#00AACC}
+</style>
+</head>
+<body>
+<div class="bg-circle"></div>
+<div class="bg-dots"></div>
+
+<header>
+  <div class="wordmark">GROK PIPELINE<small>Scouter · Architect · Refiner · Extractor · xAI</small></div>
+  <div style="display:flex;gap:12px;align-items:center">
+    <span id="err"></span>
+    <button id="btn-run" onclick="runPipeline()">🚀 Dispara Grok!</button>
+  </div>
+</header>
+
+<div class="tab-bar">
+  <button class="tab active" id="tab-input" onclick="sw('input')">
+    <span class="tab__label">00 — Input</span>
+    <span class="tab__sub">Joga o texto acadêmico</span>
+  </button>
+  <button class="tab" id="tab-scouter" onclick="sw('scouter')">
+    <span class="tab__label">01 — Scouter</span>
+    <span class="tab__sub">Mapeio a bagunça</span>
+    <div class="tab__dot"></div>
+  </button>
+  <button class="tab" id="tab-architect" onclick="sw('architect')">
+    <span class="tab__label">02 — Architect</span>
+    <span class="tab__sub">Monto o prompt ninja</span>
+    <div class="tab__dot"></div>
+  </button>
+  <button class="tab" id="tab-refiner" onclick="sw('refiner')">
+    <span class="tab__label">03 — Refiner</span>
+    <span class="tab__sub">Aperto os parafusos</span>
+    <div class="tab__dot"></div>
+  </button>
+  <button class="tab" id="tab-extractor" onclick="sw('extractor')">
+    <span class="tab__label">04 — Extractor</span>
+    <span class="tab__sub">JSON na cara</span>
+    <div class="tab__dot"></div>
+  </button>
+</div>
+
+<main>
+  <!-- 00 INPUT -->
+  <div class="panel active" id="panel-input">
+    <div class="panel-header">
+      <label style="font-size:11px;font-weight:900;letter-spacing:4px;text-transform:uppercase">Texto Acadêmico</label>
+      <span id="cc" style="font-size:10px;color:#888;font-weight:900;letter-spacing:2px">0 chars</span>
+    </div>
+    <textarea id="doc"
+      placeholder="Cole seu paper, capítulo de tese, artigo... aqui"
+      oninput="document.getElementById('cc').textContent=this.value.length+' chars'"></textarea>
+  </div>
+
+  <!-- 01 SCOUTER -->
+  <div class="panel" id="panel-scouter">
+    <div class="panel-header">
+      <div>
+        <span class="tag accent">01 — Scouter</span>
+        <span class="panel-sub">Mapeamento da estrutura lógica</span>
+      </div>
+      <button class="btn-ghost" onclick="cp('scouter')">Copiar</button>
+    </div>
+    <div class="loading" id="loading-scouter">
+      <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      <span class="loading-label">Scouter mapeando a bagunça...</span>
+    </div>
+    <div class="result-box teal" id="result-scouter"></div>
+    <div class="empty" id="empty-scouter">Ainda sem resultado — dispara o pipeline primeiro</div>
+  </div>
+
+  <!-- 02 ARCHITECT -->
+  <div class="panel" id="panel-architect">
+    <div class="panel-header">
+      <div>
+        <span class="tag accent">02 — Architect</span>
+        <span class="panel-sub">System prompt de extração gerado</span>
+      </div>
+      <button class="btn-ghost" onclick="cp('architect')">Copiar</button>
+    </div>
+    <div class="loading" id="loading-architect">
+      <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      <span class="loading-label">Architect montando o prompt ninja...</span>
+    </div>
+    <div class="result-box teal" id="result-architect"></div>
+    <div class="empty" id="empty-architect">Ainda sem resultado — dispara o pipeline primeiro</div>
+  </div>
+
+  <!-- 03 REFINER -->
+  <div class="panel" id="panel-refiner">
+    <div class="panel-header">
+      <div>
+        <span class="tag accent">03 — Refiner</span>
+        <span class="panel-sub">Scores de qualidade + prompt refinado</span>
+      </div>
+      <button class="btn-ghost" onclick="cp('refiner')">Copiar</button>
+    </div>
+    <div class="loading" id="loading-refiner">
+      <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      <span class="loading-label">Refiner apertando os parafusos...</span>
+    </div>
+    <div class="result-box teal" id="result-refiner"></div>
+    <div class="empty" id="empty-refiner">Ainda sem resultado — dispara o pipeline primeiro</div>
+  </div>
+
+  <!-- 04 EXTRACTOR -->
+  <div class="panel" id="panel-extractor">
+    <div class="panel-header">
+      <div>
+        <span class="tag teal">04 — Extractor</span>
+        <span class="panel-sub">Extração estruturada final</span>
+      </div>
+      <button class="btn-ghost" onclick="cp('extractor')">Copiar JSON</button>
+    </div>
+    <div id="json-lbl" class="json-label"></div>
+    <div class="loading" id="loading-extractor">
+      <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      <span class="loading-label">Extractor puxando o JSON...</span>
+    </div>
+    <div class="result-box mono" id="result-extractor"></div>
+    <div class="empty" id="empty-extractor">Ainda sem resultado — dispara o pipeline primeiro</div>
+  </div>
+</main>
+
+<footer>
+  <span>Grok Pipeline Engine</span>
+  <div class="footer-r">
+    <span id="footer-status">Powered by Grok – xAI</span>
+    <button id="btn-dl" onclick="dlMD()">⬇️ Download .md</button>
+  </div>
+</footer>
+
+<script>
+// =====================================================================
+// CONFIGURAÇÃO — troque pela sua chave da API xAI
+// ATENÇÃO: nunca exponha essa chave em repositórios públicos!
+// =====================================================================
+const GROK_API_KEY = 'sk-...sua-chave-da-api-xai-aqui...'; // <-- TROQUE AQUI
+
+// Armazena resultados de cada estágio
+const R = {};
+
+// =====================================================================
+// NAVEGAÇÃO — troca o painel ativo e a tab ativa
+// =====================================================================
+function sw(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  document.getElementById('panel-' + id).classList.add('active');
+}
+
+// =====================================================================
+// CONTROLE DE ESTÁGIO
+// =====================================================================
+function startStage(id) {
+  sw(id);
+  document.getElementById('loading-' + id).classList.add('on');
+  document.getElementById('result-' + id).style.display = 'none';
+  document.getElementById('empty-' + id).style.display = 'none';
+  const tab = document.getElementById('tab-' + id);
+  tab.classList.add('running');
+  tab.classList.remove('done');
+}
+
+function endStage(id, text) {
+  R[id] = text;
+  document.getElementById('loading-' + id).classList.remove('on');
+  const box = document.getElementById('result-' + id);
+  box.textContent = text;
+  box.style.display = 'block';
+  const tab = document.getElementById('tab-' + id);
+  tab.classList.remove('running');
+  tab.classList.add('done');
+}
+
+// =====================================================================
+// UTILITÁRIOS
+// =====================================================================
+function cp(id) {
+  const text = R[id] || '';
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target;
+    const orig = btn.textContent;
+    btn.textContent = 'Copiado!';
+    setTimeout(() => { btn.textContent = orig; }, 1500);
+  });
+}
+
+function showErr(msg) {
+  const e = document.getElementById('err');
+  e.textContent = msg || 'Tá de brincadeira? Cola texto decente aí.';
+  e.style.display = 'inline';
+  setTimeout(() => { e.style.display = 'none'; }, 5000);
+}
+
+// Tenta fazer parse do JSON — aceita texto com blocos markdown ou raw
+function tryJSON(str) {
+  try {
+    // Remove bloco ```json ... ``` ou ``` ... ``` se presente
+    const cleaned = str
+      .replace(/^```(?:json)?\s*/i, '')
+      .replace(/\s*```$/, '')
+      .trim();
+    return JSON.parse(cleaned);
+  } catch (_) {
+    return null;
+  }
+}
+
+// Extrai o prompt refinado da saída do Refiner
+function getRefined(txt) {
+  const match = txt.match(/##\s*Refined System Prompt\s*([\s\S]+)/i);
+  return match ? match[1].trim() : null;
+}
+
+// Download do resultado completo como arquivo Markdown
+function dlMD() {
+  const now = new Date().toISOString().slice(0, 16).replace('T', ' ');
+  const sections = [
+    `# Grok Pipeline Export\n_Gerado em ${now}_\n`,
+    R.scouter    ? `## 01 — Scouter\n\n${R.scouter}\n`    : '',
+    R.architect  ? `## 02 — Architect\n\n${R.architect}\n` : '',
+    R.refiner    ? `## 03 — Refiner\n\n${R.refiner}\n`    : '',
+    R.extractor  ? `## 04 — Extractor\n\n\`\`\`json\n${R.extractor}\n\`\`\`\n` : '',
+  ];
+  const blob = new Blob([sections.join('\n---\n\n')], { type: 'text/markdown;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'grok-pipeline.md';
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+}
+
+// =====================================================================
+// CHAMADA À API DO GROK (xAI)
+// =====================================================================
+async function api(system, user, max = 1000) {
+  const res = await fetch('https://api.x.ai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${GROK_API_KEY}`
+    },
+    body: JSON.stringify({
+      model: 'grok-beta',
+      messages: [
+        { role: 'system', content: system },
+        { role: 'user',   content: user   }
+      ],
+      max_tokens: max,
+      temperature: 0.6
+    })
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    throw new Error(`Grok disse não: HTTP ${res.status}${body ? ' — ' + body.slice(0, 120) : ''}`);
+  }
+  const data = await res.json();
+  return data.choices?.[0]?.message?.content?.trim() || '';
+}
+
+// =====================================================================
+// PROMPTS DO PIPELINE
+// =====================================================================
+const PROMPTS = {
+  scouter: `Você é o Scouter do Grok. Mapeie a arquitetura lógica do texto acadêmico.
+Não resuma o conteúdo. Liste exatamente:
+(1) Tese central
+(2) Estrutura das seções
+(3) Conceitos-chave e suas relações
+(4) Tipos de evidência utilizados
+(5) Fluxo do argumento
+(6) Suposições implícitas
+Seja seco, objetivo e direto. Sem enrolação.`,
+
+  architect: `Você é o Architect do Grok. Com base no mapeamento recebido, crie um system prompt PERFEITO para extrair informações estruturadas de texto acadêmico.
+Requisitos: zero enrolação, formato de extração rígido, anti-alucinação total, produção-ready.
+O prompt deve instruir o modelo a retornar JSON válido com chaves bem definidas.
+Retorne APENAS o system prompt, sem explicações adicionais.`,
+
+  refiner: `Você é o Refiner do Grok. Avalie o system prompt recebido em 7 dimensões (escala 1–5) e devolva a versão corrigida.
+Use EXATAMENTE este formato:
+
+## Quality Scores
+Specificity: X/5 — [justificativa curta]
+Completeness: X/5 — [justificativa curta]
+Anti-hallucination: X/5 — [justificativa curta]
+Output format: X/5 — [justificativa curta]
+Robustness: X/5 — [justificativa curta]
+Conciseness: X/5 — [justificativa curta]
+Production-readiness: X/5 — [justificativa curta]
+
+## Refined System Prompt
+[prompt final corrigido e completo]`
+};
+
+// =====================================================================
+// PIPELINE PRINCIPAL
+// =====================================================================
+async function runPipeline() {
+  const doc = document.getElementById('doc').value.trim();
+  if (!doc) return showErr('Sem texto, sem pipeline, meu consagrado.');
+  if (GROK_API_KEY.startsWith('sk-...')) return showErr('Coloca sua chave da API xAI primeiro!');
+
+  const btn = document.getElementById('btn-run');
+  btn.disabled = true;
+  btn.textContent = 'Pipetando...';
+  document.getElementById('btn-dl').style.display = 'none';
+  document.getElementById('json-lbl').style.display = 'none';
+  document.getElementById('footer-status').textContent = 'Pipeline rodando...';
+  document.getElementById('footer-status').style.color = '#FF4500';
+
+  // Resetar tabs de estágios anteriores
+  ['scouter', 'architect', 'refiner', 'extractor'].forEach(id => {
+    document.getElementById('tab-' + id).classList.remove('done', 'running');
+  });
+
+  try {
+    // 01 — Scouter: mapeia estrutura do texto
+    startStage('scouter');
+    const scouterOut = await api(PROMPTS.scouter, doc);
+    endStage('scouter', scouterOut);
+
+    // 02 — Architect: gera system prompt de extração com base no mapeamento
+    startStage('architect');
+    const architectOut = await api(PROMPTS.architect, scouterOut);
+    endStage('architect', architectOut);
+
+    // 03 — Refiner: avalia e refina o prompt do Architect
+    startStage('refiner');
+    const refinerOut = await api(PROMPTS.refiner, architectOut);
+    endStage('refiner', refinerOut);
+
+    // 04 — Extractor: usa o prompt refinado para extrair JSON do texto original
+    startStage('extractor');
+    const refinedPrompt = getRefined(refinerOut) || architectOut;
+    const extractionSystem = refinedPrompt + '\n\nIMPORTANTE: Responda SOMENTE com JSON válido. Sem markdown, sem explicação, sem texto fora do JSON.';
+    const extRaw = await api(extractionSystem, doc, 2000);
+
+    const json = tryJSON(extRaw);
+    if (json) {
+      const formatted = JSON.stringify(json, null, 2);
+      endStage('extractor', formatted);
+      const keyCount = Array.isArray(json) ? json.length : Object.keys(json).length;
+      const unit = Array.isArray(json) ? 'itens' : 'chaves';
+      const lbl = document.getElementById('json-lbl');
+      lbl.textContent = `✅ JSON válido — ${keyCount} ${unit}`;
+      lbl.style.display = 'block';
+    } else {
+      endStage('extractor', extRaw);
+      const lbl = document.getElementById('json-lbl');
+      lbl.textContent = '⚠️ Resposta não é JSON puro — verifique o conteúdo';
+      lbl.style.color = '#FF4500';
+      lbl.style.display = 'block';
+    }
+
+    document.getElementById('footer-status').textContent = '✅ Pipeline completo — Grok mandou bem';
+    document.getElementById('footer-status').style.color = '#FF6B00';
+    document.getElementById('btn-dl').style.display = 'inline-block';
+    sw('extractor');
+
+  } catch (err) {
+    showErr('Deu ruim: ' + err.message);
+    document.getElementById('footer-status').textContent = '❌ Falha no pipeline';
+    document.getElementById('footer-status').style.color = '#FF4500';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🚀 Dispara Grok!';
+  }
+}
+</script>
+</body>
+</html>
