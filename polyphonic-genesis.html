@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polyphonic Genesis — Algorithmic Philosophy of Unified Emergence</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; height: 100vh; }
+  canvas { display: block; }
+  #ui { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.4); font: 12px monospace; text-align: center; pointer-events: none; }
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div id="ui">click to regenerate</div>
+<script>
+// ============================================================
+// POLYPHONIC GENESIS
+// An Algorithmic Philosophy of Unified Emergence
+// Five voices in counterpoint: Crystallization, Field Dynamics,
+// Organic Turbulence, Quantum Harmonics, Recursive Whispers
+// ============================================================
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+let W, H;
+
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
+  W = window.innerWidth;
+  H = window.innerHeight;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+// ---- Pseudo-random with seed ----
+function mulberry32(a) {
+  return function() {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+let rng;
+
+// ---- Perlin Noise (2D, multi-octave) ----
+const PERM = new Uint8Array(512);
+const GRAD = [[1,1],[-1,1],[1,-1],[-1,-1],[1,0],[-1,0],[0,1],[0,-1]];
+
+function initNoise() {
+  const p = new Uint8Array(256);
+  for (let i = 0; i < 256; i++) p[i] = i;
+  for (let i = 255; i > 0; i--) {
+    const j = (rng() * (i + 1)) | 0;
+    [p[i], p[j]] = [p[j], p[i]];
+  }
+  for (let i = 0; i < 512; i++) PERM[i] = p[i & 255];
+}
+
+function fade(t) { return t * t * t * (t * (t * 6 - 15) + 10); }
+function lerp(a, b, t) { return a + t * (b - a); }
+
+function perlin2(x, y) {
+  const xi = Math.floor(x) & 255, yi = Math.floor(y) & 255;
+  const xf = x - Math.floor(x), yf = y - Math.floor(y);
+  const u = fade(xf), v = fade(yf);
+  const aa = PERM[PERM[xi] + yi], ab = PERM[PERM[xi] + yi + 1];
+  const ba = PERM[PERM[xi + 1] + yi], bb = PERM[PERM[xi + 1] + yi + 1];
+  function dot(hash, fx, fy) { const g = GRAD[hash & 7]; return g[0] * fx + g[1] * fy; }
+  return lerp(
+    lerp(dot(aa, xf, yf), dot(ba, xf - 1, yf), u),
+    lerp(dot(ab, xf, yf - 1), dot(bb, xf - 1, yf - 1), u),
+    v
+  );
+}
+
+function fbm(x, y, octaves, lacunarity, gain) {
+  let val = 0, amp = 1, freq = 1, max = 0;
+  for (let i = 0; i < octaves; i++) {
+    val += perlin2(x * freq, y * freq) * amp;
+    max += amp;
+    amp *= gain;
+    freq *= lacunarity;
+  }
+  return val / max;
+}
+
+// ============================================================
+// VOICE 1: STOCHASTIC CRYSTALLIZATION
+// Voronoi tessellation from relaxed seed points
+// ============================================================
+
+let cells = [];
+const NUM_CELLS = 40;
+
+function generateCells() {
+  cells = [];
+  // Scatter seed points
+  for (let i = 0; i < NUM_CELLS; i++) {
+    cells.push({
+      x: rng() * W,
+      y: rng() * H,
+      hue: rng() * 360,
+      phase: rng() * Math.PI * 2,
+      freq: 0.3 + rng() * 0.7,
+      strength: 0.5 + rng() * 1.5
+    });
+  }
+  // Lloyd relaxation (3 iterations)
+  for (let iter = 0; iter < 3; iter++) {
+    const sums = cells.map(() => ({ x: 0, y: 0, n: 0 }));
+    const step = 8;
+    for (let y = 0; y < H; y += step) {
+      for (let x = 0; x < W; x += step) {
+        let minD = Infinity, minI = 0;
+        for (let i = 0; i < cells.length; i++) {
+          const dx = x - cells[i].x, dy = y - cells[i].y;
+          const d = dx * dx + dy * dy;
+          if (d < minD) { minD = d; minI = i; }
+        }
+        sums[minI].x += x;
+        sums[minI].y += y;
+        sums[minI].n++;
+      }
+    }
+    for (let i = 0; i < cells.length; i++) {
+      if (sums[i].n > 0) {
+        cells[i].x = sums[i].x / sums[i].n;
+        cells[i].y = sums[i].y / sums[i].n;
+      }
+    }
+  }
+}
+
+function nearestCell(x, y) {
+  let minD = Infinity, minI = 0;
+  for (let i = 0; i < cells.length; i++) {
+    const dx = x - cells[i].x, dy = y - cells[i].y;
+    const d = dx * dx + dy * dy;
+    if (d < minD) { minD = d; minI = i; }
+  }
+  return { index: minI, dist: Math.sqrt(minD) };
+}
+
+function distToSecondNearest(x, y) {
+  let d1 = Infinity, d2 = Infinity;
+  for (let i = 0; i < cells.length; i++) {
+    const dx = x - cells[i].x, dy = y - cells[i].y;
+    const d = dx * dx + dy * dy;
+    if (d < d1) { d2 = d1; d1 = d; }
+    else if (d < d2) { d2 = d; }
+  }
+  return Math.sqrt(d2) - Math.sqrt(d1);
+}
+
+function drawCrystallization() {
+  const imgData = ctx.createImageData(W, H);
+  const data = imgData.data;
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const { index, dist } = nearestCell(x, y);
+      const cell = cells[index];
+      const edgeDist = distToSecondNearest(x, y);
+      const edgeFactor = Math.max(0, 1 - edgeDist / 3);
+
+      const n = fbm(x * 0.003, y * 0.003, 3, 2.0, 0.5);
+      const hue = (cell.hue + n * 30) % 360;
+      const sat = 0.15 + edgeFactor * 0.1;
+      const lum = 0.04 + edgeFactor * 0.08 + n * 0.015;
+
+      const rgb = hslToRgb(hue / 360, sat, lum);
+      const idx = (y * W + x) * 4;
+      data[idx] = rgb[0];
+      data[idx + 1] = rgb[1];
+      data[idx + 2] = rgb[2];
+      data[idx + 3] = 255;
+    }
+  }
+  ctx.putImageData(imgData, 0, 0);
+}
+
+// ============================================================
+// VOICE 2: FIELD DYNAMICS
+// Attractor forces at cell centers curving particle paths
+// ============================================================
+
+function attractorField(x, y) {
+  let fx = 0, fy = 0;
+  for (const cell of cells) {
+    const dx = cell.x - x, dy = cell.y - y;
+    const d2 = dx * dx + dy * dy + 1000;
+    const strength = cell.strength / d2;
+    fx += dx * strength;
+    fy += dy * strength;
+  }
+  // Normalize and scale
+  const mag = Math.sqrt(fx * fx + fy * fy) + 0.0001;
+  return { x: fx / mag, y: fy / mag, mag };
+}
+
+// Combined flow field: Perlin noise + attractor forces
+function flowField(x, y, time) {
+  const scale = 0.0025;
+  const angle = fbm(x * scale, y * scale + time * 0.05, 4, 2.0, 0.5) * Math.PI * 4;
+  const noiseX = Math.cos(angle);
+  const noiseY = Math.sin(angle);
+
+  const att = attractorField(x, y);
+  const blend = 0.6; // noise vs attractor balance
+  return {
+    x: noiseX * blend + att.x * (1 - blend),
+    y: noiseY * blend + att.y * (1 - blend)
+  };
+}
+
+// ============================================================
+// VOICE 3: ORGANIC TURBULENCE
+// Thousands of particles tracing flow fields
+// ============================================================
+
+const MAX_PARTICLES = 6000;
+let particles = [];
+
+function spawnParticles() {
+  particles = [];
+  for (let i = 0; i < MAX_PARTICLES; i++) {
+    particles.push(createParticle());
+  }
+}
+
+function createParticle() {
+  // Spawn at edges and thresholds
+  let x, y;
+  const edge = rng();
+  if (edge < 0.25) { x = 0; y = rng() * H; }
+  else if (edge < 0.5) { x = W; y = rng() * H; }
+  else if (edge < 0.75) { x = rng() * W; y = 0; }
+  else { x = rng() * W; y = H; }
+
+  // Also spawn some near cell boundaries
+  if (rng() < 0.4) {
+    x = rng() * W;
+    y = rng() * H;
+  }
+
+  return {
+    x, y,
+    prevX: x, prevY: y,
+    phase: rng() * Math.PI * 2,
+    phaseSpeed: 0.02 + rng() * 0.06,
+    life: 0,
+    maxLife: 150 + (rng() * 300) | 0,
+    speed: 0.8 + rng() * 1.2,
+    hueOffset: rng() * 40 - 20
+  };
+}
+
+// Density accumulation buffer
+let densityBuffer;
+
+function initDensity() {
+  densityBuffer = new Float32Array(W * H);
+}
+
+function accumulateDensity(x, y, amount) {
+  const ix = x | 0, iy = y | 0;
+  if (ix >= 0 && ix < W && iy >= 0 && iy < H) {
+    densityBuffer[iy * W + ix] += amount;
+  }
+}
+
+// ============================================================
+// VOICE 4: QUANTUM HARMONICS
+// Phase-based wave interference modulating visibility
+// ============================================================
+
+function harmonicIntensity(particle, time) {
+  // Each particle carries phase; interference from neighbors computed via local density
+  const baseWave = Math.sin(particle.phase + time * particle.phaseSpeed * 10);
+  // Constructive/destructive interference approximated by density
+  const ix = particle.x | 0, iy = particle.y | 0;
+  let localDensity = 0;
+  if (ix >= 0 && ix < W && iy >= 0 && iy < H) {
+    localDensity = densityBuffer[iy * W + ix];
+  }
+  // Constructive: high density + positive wave = bright
+  // Destructive: low density + negative wave = ghostly
+  const interference = baseWave * (1 + localDensity * 0.3);
+  return Math.max(0, Math.min(1, 0.3 + interference * 0.7));
+}
+
+// ============================================================
+// VOICE 5: RECURSIVE WHISPERS
+// Branching structures from cell centers along flow field
+// ============================================================
+
+const branches = [];
+const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5)); // ~137.5 degrees
+const BRANCH_ANGLE = GOLDEN_ANGLE * 0.45; // golden-ratio-adjacent
+
+function generateBranches() {
+  branches.length = 0;
+  for (const cell of cells) {
+    const numRoots = 2 + (rng() * 3) | 0;
+    for (let r = 0; r < numRoots; r++) {
+      const angle = rng() * Math.PI * 2;
+      growBranch(cell.x, cell.y, angle, 4, 1.8, cell.hue, 0);
+    }
+  }
+}
+
+function growBranch(x, y, angle, depth, width, hue, generation) {
+  if (depth <= 0 || width < 0.2) return;
+
+  const segLen = 8 + rng() * 12;
+  const steps = (segLen / 2) | 0;
+  const points = [{ x, y }];
+
+  let cx = x, cy = y, ca = angle;
+  for (let i = 0; i < steps; i++) {
+    // Follow flow field with noise perturbation
+    const flow = flowField(cx, cy, 0);
+    const flowAngle = Math.atan2(flow.y, flow.x);
+    ca = ca * 0.7 + flowAngle * 0.3 + (rng() - 0.5) * 0.3;
+    cx += Math.cos(ca) * 2;
+    cy += Math.sin(ca) * 2;
+    points.push({ x: cx, y: cy });
+  }
+
+  branches.push({ points, width, hue: (hue + generation * 15) % 360, alpha: 0.3 + (depth / 5) * 0.5 });
+
+  // Bifurcate
+  if (rng() < 0.7 + depth * 0.05) {
+    const perturbation = (rng() - 0.5) * 0.2;
+    growBranch(cx, cy, ca + BRANCH_ANGLE + perturbation, depth - 1, width * 0.68, hue, generation + 1);
+  }
+  if (rng() < 0.6 + depth * 0.05) {
+    const perturbation = (rng() - 0.5) * 0.2;
+    growBranch(cx, cy, ca - BRANCH_ANGLE + perturbation, depth - 1, width * 0.68, hue, generation + 1);
+  }
+}
+
+function drawBranches() {
+  for (const b of branches) {
+    if (b.points.length < 2) continue;
+    ctx.beginPath();
+    ctx.moveTo(b.points[0].x, b.points[0].y);
+    for (let i = 1; i < b.points.length; i++) {
+      ctx.lineTo(b.points[i].x, b.points[i].y);
+    }
+    const rgb = hslToRgb(b.hue / 360, 0.5, 0.5);
+    ctx.strokeStyle = `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${b.alpha * 0.4})`;
+    ctx.lineWidth = b.width;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+  }
+}
+
+// ============================================================
+// COLOR UTILITIES
+// ============================================================
+
+function hslToRgb(h, s, l) {
+  let r, g, b;
+  if (s === 0) { r = g = b = l; }
+  else {
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1/3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1/3);
+  }
+  return [(r * 255) | 0, (g * 255) | 0, (b * 255) | 0];
+}
+
+// ============================================================
+// MAIN ANIMATION LOOP
+// ============================================================
+
+let time = 0;
+let animFrame;
+
+function generate() {
+  const seed = (Math.random() * 999999) | 0;
+  rng = mulberry32(seed);
+  initNoise();
+
+  resize();
+  initDensity();
+  generateCells();
+  spawnParticles();
+  generateBranches();
+
+  // Draw crystallization base
+  drawCrystallization();
+
+  // Draw branches (Recursive Whispers)
+  drawBranches();
+
+  time = 0;
+  if (animFrame) cancelAnimationFrame(animFrame);
+  animate();
+}
+
+function animate() {
+  time += 0.016;
+
+  // Semi-transparent overlay for trail persistence
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.012)';
+  ctx.fillRect(0, 0, W, H);
+
+  // Redraw faint crystallization edges periodically
+  if (Math.floor(time * 60) % 180 === 0) {
+    drawCrystallization();
+    drawBranches();
+  }
+
+  // Update and draw particles (Organic Turbulence + Quantum Harmonics)
+  for (let i = 0; i < particles.length; i++) {
+    const p = particles[i];
+    p.prevX = p.x;
+    p.prevY = p.y;
+
+    // Flow field integration
+    const flow = flowField(p.x, p.y, time);
+    p.x += flow.x * p.speed;
+    p.y += flow.y * p.speed;
+
+    // Phase evolution (Quantum Harmonics)
+    p.phase += p.phaseSpeed;
+    p.life++;
+
+    // Respawn if dead or off-screen
+    if (p.life > p.maxLife || p.x < -10 || p.x > W + 10 || p.y < -10 || p.y > H + 10) {
+      const np = createParticle();
+      Object.assign(p, np);
+      continue;
+    }
+
+    // Accumulate density
+    accumulateDensity(p.x, p.y, 0.15);
+
+    // Compute harmonic intensity
+    const intensity = harmonicIntensity(p, time);
+
+    // Color from nearest cell
+    const { index } = nearestCell(p.x, p.y);
+    const cell = cells[index];
+    const hue = (cell.hue + p.hueOffset + time * 5) % 360;
+    const sat = 0.6 + intensity * 0.3;
+    const lum = 0.3 + intensity * 0.5;
+    const alpha = intensity * (1 - p.life / p.maxLife) * 0.6;
+
+    if (alpha > 0.01) {
+      const rgb = hslToRgb(hue / 360, sat, lum);
+      ctx.beginPath();
+      ctx.moveTo(p.prevX, p.prevY);
+      ctx.lineTo(p.x, p.y);
+      ctx.strokeStyle = `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha})`;
+      ctx.lineWidth = 0.5 + intensity * 1.5;
+      ctx.stroke();
+    }
+  }
+
+  // Slowly decay density buffer
+  for (let i = 0; i < densityBuffer.length; i++) {
+    densityBuffer[i] *= 0.98;
+  }
+
+  // Draw harmonic focal points (Quantum Harmonics - incandescent nodes)
+  if (Math.floor(time * 60) % 3 === 0) {
+    for (const cell of cells) {
+      const pulse = Math.sin(time * cell.freq * 3 + cell.phase);
+      if (pulse > 0.5) {
+        const glow = (pulse - 0.5) * 2;
+        const rgb = hslToRgb(cell.hue / 360, 0.7, 0.7);
+        const grad = ctx.createRadialGradient(cell.x, cell.y, 0, cell.x, cell.y, 20 + glow * 30);
+        grad.addColorStop(0, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${glow * 0.08})`);
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(cell.x - 50, cell.y - 50, 100, 100);
+      }
+    }
+  }
+
+  animFrame = requestAnimationFrame(animate);
+}
+
+// ============================================================
+// INTERACTION
+// ============================================================
+
+window.addEventListener('resize', () => { generate(); });
+canvas.addEventListener('click', () => { generate(); });
+
+generate();
+</script>
+</body>
+</html>
