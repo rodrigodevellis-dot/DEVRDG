@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scouter | Rodrigo Devellis</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="scouter.css">
+</head>
+<body>
+    <div class="container scouter-container">
+        <header class="scouter-header">
+            <a href="index.html" class="back-link">&larr; Voltar</a>
+            <h1>Scouter</h1>
+            <p class="tagline">Extrator de JSON a partir de texto</p>
+            <p class="bio">Cole um texto e o Scouter encontra e extrai estruturas JSON automaticamente.</p>
+        </header>
+
+        <div class="card">
+            <h2>Entrada</h2>
+            <div class="form-group">
+                <label for="inputText">Cole seu texto aqui</label>
+                <textarea id="inputText" rows="10" placeholder='Exemplo: O resultado foi {"nome": "Rodrigo", "idade": 30} e mais dados...'></textarea>
+            </div>
+            <button class="btn" id="extractBtn">Extrair JSON</button>
+        </div>
+
+        <div class="card" id="resultCard" style="display: none;">
+            <div class="result-header">
+                <h2>Resultado</h2>
+                <span class="badge" id="countBadge"></span>
+            </div>
+            <div id="resultArea"></div>
+        </div>
+
+        <div class="card scouter-about">
+            <h2>Sobre o projeto</h2>
+            <p>O <strong>Scouter</strong> é uma ferramenta em Python que recebe um texto qualquer e extrai automaticamente estruturas JSON válidas encontradas nele.</p>
+            <div class="features">
+                <div class="feature">
+                    <span class="feature-icon">&#x1F50D;</span>
+                    <div>
+                        <strong>Detecção inteligente</strong>
+                        <p>Encontra JSON embutido em qualquer texto</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">&#x2705;</span>
+                    <div>
+                        <strong>Validação automática</strong>
+                        <p>Verifica se o JSON extraído é válido</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">&#x1F4CB;</span>
+                    <div>
+                        <strong>Formatação limpa</strong>
+                        <p>Exibe o JSON formatado e pronto para uso</p>
+                    </div>
+                </div>
+            </div>
+            <p class="tech-stack">Feito com Python</p>
+        </div>
+
+        <footer>
+            &copy; 2026 Rodrigo Devellis. Todos os direitos reservados.
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('extractBtn').addEventListener('click', function() {
+            const text = document.getElementById('inputText').value.trim();
+            const resultCard = document.getElementById('resultCard');
+            const resultArea = document.getElementById('resultArea');
+            const countBadge = document.getElementById('countBadge');
+
+            if (!text) {
+                resultCard.style.display = 'none';
+                return;
+            }
+
+            const jsons = extractJSON(text);
+
+            resultCard.style.display = 'block';
+            resultArea.innerHTML = '';
+
+            if (jsons.length === 0) {
+                countBadge.textContent = 'Nenhum encontrado';
+                countBadge.className = 'badge badge-empty';
+                resultArea.innerHTML = '<p class="no-result">Nenhum JSON encontrado no texto.</p>';
+                return;
+            }
+
+            countBadge.textContent = jsons.length + ' encontrado' + (jsons.length > 1 ? 's' : '');
+            countBadge.className = 'badge badge-success';
+
+            jsons.forEach(function(item, i) {
+                const block = document.createElement('div');
+                block.className = 'json-block';
+
+                const header = document.createElement('div');
+                header.className = 'json-block-header';
+                header.innerHTML = '<span>JSON #' + (i + 1) + '</span>';
+
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'copy-btn';
+                copyBtn.textContent = 'Copiar';
+                copyBtn.addEventListener('click', function() {
+                    navigator.clipboard.writeText(item.formatted).then(function() {
+                        copyBtn.textContent = 'Copiado!';
+                        setTimeout(function() { copyBtn.textContent = 'Copiar'; }, 1500);
+                    });
+                });
+                header.appendChild(copyBtn);
+
+                const pre = document.createElement('pre');
+                const code = document.createElement('code');
+                code.textContent = item.formatted;
+                pre.appendChild(code);
+
+                block.appendChild(header);
+                block.appendChild(pre);
+                resultArea.appendChild(block);
+            });
+        });
+
+        function extractJSON(text) {
+            const results = [];
+            const openers = ['{', '['];
+
+            for (let i = 0; i < text.length; i++) {
+                if (!openers.includes(text[i])) continue;
+
+                const closer = text[i] === '{' ? '}' : ']';
+                let depth = 0;
+                let inString = false;
+                let escape = false;
+
+                for (let j = i; j < text.length; j++) {
+                    const ch = text[j];
+
+                    if (escape) {
+                        escape = false;
+                        continue;
+                    }
+
+                    if (ch === '\\' && inString) {
+                        escape = true;
+                        continue;
+                    }
+
+                    if (ch === '"') {
+                        inString = !inString;
+                        continue;
+                    }
+
+                    if (inString) continue;
+
+                    if (ch === text[i]) depth++;
+                    else if (ch === closer) depth--;
+
+                    if (depth === 0) {
+                        const candidate = text.substring(i, j + 1);
+                        try {
+                            const parsed = JSON.parse(candidate);
+                            results.push({
+                                raw: candidate,
+                                formatted: JSON.stringify(parsed, null, 2)
+                            });
+                            i = j;
+                        } catch (e) {
+                            // não é JSON válido
+                        }
+                        break;
+                    }
+                }
+            }
+
+            return results;
+        }
+    </script>
+</body>
+</html>
