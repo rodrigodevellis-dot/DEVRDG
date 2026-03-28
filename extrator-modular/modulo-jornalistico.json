@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Módulo: Jornalístico",
+  "description": "Campos específicos para textos jornalísticos — notícias, reportagens, colunas, editoriais. Captura enquadramento, fontes, agenda e construção da informação. Acoplável ao núcleo.",
+  "type": "object",
+  "properties": {
+    "jornalistico": {
+      "type": "object",
+      "properties": {
+        "tipo_texto": {
+          "type": "string",
+          "description": "Notícia, reportagem, editorial, coluna, entrevista, artigo de opinião, nota, perfil"
+        },
+        "veiculo": {
+          "type": "object",
+          "properties": {
+            "nome": { "type": "string" },
+            "tipo": { "type": "string", "description": "Jornal, revista, portal, TV, rádio, podcast, etc." },
+            "linha_editorial": { "type": "string", "description": "Posicionamento editorial conhecido do veículo" },
+            "alcance": { "type": "string", "description": "Local, regional, nacional, internacional" }
+          }
+        },
+        "enquadramento": {
+          "type": "object",
+          "description": "Como o texto constrói a realidade que apresenta",
+          "properties": {
+            "angulo": { "type": "string", "description": "Por que ângulo o fato é apresentado" },
+            "o_que_enfatiza": { "type": "array", "items": { "type": "string" } },
+            "o_que_omite_ou_minimiza": { "type": "array", "items": { "type": "string" } },
+            "metaforas_enquadradoras": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Metáforas que estruturam a compreensão do fato (ex: 'guerra contra o vírus', 'crise migratória')"
+            },
+            "categorias_usadas": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Como os sujeitos são nomeados/categorizados (ex: 'invasores' vs 'manifestantes')"
+            }
+          }
+        },
+        "fontes": {
+          "type": "array",
+          "description": "Quem fala no texto e com que autoridade",
+          "items": {
+            "type": "object",
+            "properties": {
+              "quem": { "type": "string" },
+              "tipo_fonte": { "type": "string", "description": "Oficial, especialista, testemunha, vítima, anônima, documental, etc." },
+              "o_que_diz": { "type": "string" },
+              "como_apresentada": { "type": "string", "description": "Como o texto qualifica/introduz esta fonte" }
+            }
+          }
+        },
+        "vozes_ausentes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Quem poderia/deveria ter sido ouvido e não foi"
+        },
+        "contextualizacao": {
+          "type": "object",
+          "properties": {
+            "historico_fornecido": { "type": "string", "description": "Que contexto histórico o texto oferece" },
+            "historico_ausente": { "type": "string", "description": "Que contexto seria necessário e não está" },
+            "dados_apresentados": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "agenda": {
+          "type": "object",
+          "description": "Relação com a agenda pública",
+          "properties": {
+            "tema_da_agenda": { "type": "string" },
+            "posicao_no_ciclo": { "type": "string", "description": "Emergência do tema, pico de atenção, declínio, retorno" },
+            "relacao_com_poder": { "type": "string", "description": "Alinhado, crítico, ambíguo em relação a que poder" }
+          }
+        }
+      }
+    }
+  }
+}
