@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compositor de Extração — Ciências Sociais UFSC</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Compositor de Extração Modular</h1>
+      <p>Ciências Sociais — UFSC &middot; Currículo 20071 &middot; Selecione disciplina + módulos &rarr; copie o prompt</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid">
+      <!-- ═══ Painel Lateral ═══ -->
+      <aside class="painel">
+        <h2>1. Disciplina</h2>
+        <div class="select-wrap">
+          <select id="sel-disciplina">
+            <option value="">— Selecione uma disciplina —</option>
+          </select>
+        </div>
+
+        <div id="ementa-box" class="ementa-box">
+          <div id="ementa-meta" class="meta"></div>
+          <div id="ementa-texto"></div>
+        </div>
+
+        <h3>2. Módulos de Extração</h3>
+        <div id="modulos-container" class="modulos-grid"></div>
+
+        <h3>3. Pré-processador</h3>
+        <label class="pre-processador-toggle">
+          <input type="checkbox" id="chk-pre-processador">
+          <div class="pp-info">
+            <div class="pp-nome">Análise de Domínio</div>
+            <div class="pp-desc">Mapeia estrutura argumentativa antes da extração (gera 2 prompts em sequência)</div>
+          </div>
+        </label>
+
+        <button id="btn-gerar" class="btn btn-primary">Compor Prompt</button>
+      </aside>
+
+      <!-- ═══ Área do Prompt ═══ -->
+      <section class="prompt-area">
+        <div class="prompt-header">
+          <h2>Prompt Composto</h2>
+          <div class="actions">
+            <button id="btn-copiar" class="btn btn-copy">Copiar Prompt</button>
+          </div>
+        </div>
+
+        <div id="prompt-content" class="prompt-content">
+          <div class="prompt-empty">
+            <div class="icon">&#9997;</div>
+            <p>Selecione uma disciplina e escolha os módulos de extração para compor seu prompt</p>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div>Caracteres: <span id="stats-chars">0</span></div>
+          <div>Tokens (est.): <span id="stats-tokens">~0</span></div>
+          <div>Módulos: <span id="stats-modulos">0</span></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Dados -->
+  <script src="dados/disciplinas.js"></script>
+  <script src="dados/nucleo.js"></script>
+  <script src="dados/modulos.js"></script>
+  <!-- App -->
+  <script src="app.js"></script>
+</body>
+</html>
