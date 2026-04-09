@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Núcleo de Extração — Comum a qualquer texto",
+  "description": "Campos universais que se aplicam a qualquer texto, independente do domínio ou projeto de pesquisa. Este núcleo NUNCA precisa ser reescrito.",
+  "type": "object",
+  "required": ["metadados", "texto_fonte", "argumento", "estrutura_conceitual", "citacoes_diretas"],
+  "properties": {
+    "metadados": {
+      "type": "object",
+      "description": "Identificação da obra — funciona para artigo, livro, capítulo, tese, romance, conto, etc.",
+      "properties": {
+        "titulo": { "type": "string" },
+        "autores": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "ano": { "type": "integer" },
+        "publicacao": { "type": "string", "description": "Revista, editora, plataforma, etc." },
+        "doi_isbn": { "type": "string" },
+        "tipo_texto": {
+          "type": "string",
+          "description": "Classificação livre: artigo, livro, capítulo, romance, conto, ensaio, tese, relatório, etc."
+        },
+        "idioma": { "type": "string" },
+        "palavras_chave": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "texto_fonte": {
+      "type": "object",
+      "description": "O que o texto É e SOBRE O QUE fala — sem interpretar, só localizar.",
+      "properties": {
+        "assunto_central": { "type": "string", "description": "Em uma frase: sobre o que é este texto?" },
+        "contexto_de_producao": { "type": "string", "description": "Quando, onde e em que circunstâncias foi produzido" },
+        "publico_alvo": { "type": "string", "description": "Para quem foi escrito" },
+        "genero_discursivo": { "type": "string", "description": "Acadêmico, literário, ensaístico, jornalístico, técnico, etc." }
+      }
+    },
+    "argumento": {
+      "type": "object",
+      "description": "A estrutura argumentativa do texto — todo texto defende algo, mesmo ficção.",
+      "properties": {
+        "tese_central": { "type": "string", "description": "O que o texto defende, propõe ou demonstra" },
+        "premissas": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Em que se baseia para sustentar a tese"
+        },
+        "conclusao": { "type": "string", "description": "Onde o argumento chega" },
+        "pressupostos": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "O que o texto assume como dado sem demonstrar"
+        }
+      }
+    },
+    "estrutura_conceitual": {
+      "type": "object",
+      "description": "Os conceitos que o texto mobiliza — independente de ser teoria, ficção ou ensaio.",
+      "properties": {
+        "conceitos_centrais": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "conceito": { "type": "string" },
+              "como_usado": { "type": "string", "description": "Como o texto define ou usa este conceito" },
+              "fonte_referencia": { "type": "string", "description": "De quem o autor toma este conceito, se identificável" }
+            }
+          }
+        },
+        "oposicoes_tensoes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Pares de oposição ou tensões que estruturam o texto (ex: natureza/cultura, individual/coletivo)"
+        }
+      }
+    },
+    "citacoes_diretas": {
+      "type": "array",
+      "description": "Trechos literais que valem preservar — aplicável a qualquer tipo de texto.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "trecho": { "type": "string" },
+          "localizacao": { "type": "string", "description": "Página, capítulo, parágrafo — o que estiver disponível" },
+          "relevancia": { "type": "string", "description": "Por que vale guardar este trecho" }
+        }
+      }
+    },
+    "conexoes": {
+      "type": "object",
+      "description": "Como este texto se liga a outros — funciona para qualquer domínio.",
+      "properties": {
+        "referencias_principais": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "referencia": { "type": "string" },
+              "relacao": { "type": "string", "description": "Como este texto usa aquela referência: apoia, contesta, aplica, inspira-se, etc." }
+            }
+          }
+        },
+        "dialogo_com_outros_textos": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Outros textos, autores ou tradições com quem dialoga"
+        }
+      }
+    },
+    "notas_do_pesquisador": {
+      "type": "object",
+      "description": "Suas próprias anotações — o lugar da sua voz sobre o texto.",
+      "properties": {
+        "utilidade": { "type": "string", "description": "Para que este texto serve no seu projeto" },
+        "pontos_fortes": { "type": "array", "items": { "type": "string" } },
+        "pontos_fracos": { "type": "array", "items": { "type": "string" } },
+        "perguntas_abertas": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "O que este texto deixou sem responder para você"
+        },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Tags livres para organizar e buscar depois"
+        }
+      }
+    },
+    "_modulos_aplicados": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Lista dos módulos de extração aplicados além do núcleo (ex: ['teorico', 'personagem'])"
+    }
+  }
+}

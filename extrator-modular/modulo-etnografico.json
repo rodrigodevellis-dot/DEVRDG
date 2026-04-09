@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Módulo: Etnográfico",
+  "description": "Campos específicos para textos etnográficos, relatos de campo e descrições de práticas sociais. Captura alteridade, práticas, cosmologias e a posição do observador. Acoplável ao núcleo.",
+  "type": "object",
+  "properties": {
+    "etnografico": {
+      "type": "object",
+      "properties": {
+        "campo": {
+          "type": "object",
+          "description": "O campo pesquisado",
+          "properties": {
+            "grupo_comunidade": { "type": "string", "description": "Quem são os sujeitos da etnografia" },
+            "localidade": { "type": "string" },
+            "periodo_campo": { "type": "string" },
+            "modo_insercao": { "type": "string", "description": "Como o pesquisador entrou/se inseriu no campo" },
+            "condicoes_de_pesquisa": { "type": "string", "description": "Facilitadores, barreiras, negociações de acesso" }
+          }
+        },
+        "praticas_observadas": {
+          "type": "array",
+          "description": "Práticas, rituais, atividades descritas no texto",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pratica": { "type": "string" },
+              "descricao_densa": { "type": "string", "description": "Descrição detalhada tal como apresentada no texto" },
+              "agentes": { "type": "array", "items": { "type": "string" }, "description": "Quem participa/realiza" },
+              "contexto_situacional": { "type": "string", "description": "Quando e em que circunstâncias ocorre" },
+              "significado_atribuido": {
+                "type": "object",
+                "properties": {
+                  "pelos_sujeitos": { "type": "string", "description": "O que os sujeitos dizem sobre a prática" },
+                  "pelo_pesquisador": { "type": "string", "description": "A interpretação analítica do pesquisador" }
+                }
+              },
+              "materialidade": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Objetos, espaços, corpos, substâncias envolvidas"
+              }
+            }
+          }
+        },
+        "categorias_nativas": {
+          "type": "array",
+          "description": "Termos e conceitos dos próprios sujeitos da pesquisa",
+          "items": {
+            "type": "object",
+            "properties": {
+              "termo": { "type": "string" },
+              "significado_nativo": { "type": "string", "description": "O que significa para os sujeitos" },
+              "traducao_analitica": { "type": "string", "description": "Como o pesquisador traduz/interpreta analiticamente" },
+              "intraduzibilidade": { "type": "string", "description": "O que se perde na tradução, se houver" }
+            }
+          }
+        },
+        "cosmologia_ontologia": {
+          "type": "object",
+          "description": "Visão de mundo, modos de existência, relações com o não-humano",
+          "properties": {
+            "principios_organizadores": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Princípios que organizam o mundo dos sujeitos"
+            },
+            "relacoes_nao_humanas": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Relações com animais, espíritos, objetos, paisagens como agentes"
+            },
+            "temporalidade": { "type": "string", "description": "Como o grupo concebe o tempo" },
+            "espacialidade": { "type": "string", "description": "Como o grupo organiza e significa o espaço" }
+          }
+        },
+        "relacoes_de_poder": {
+          "type": "object",
+          "properties": {
+            "hierarquias_internas": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Estruturas de poder dentro do grupo"
+            },
+            "relacao_com_estado_mercado": { "type": "string" },
+            "conflitos": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "posicao_do_etnografo": {
+          "type": "object",
+          "description": "Reflexividade do pesquisador sobre sua própria posição",
+          "properties": {
+            "como_percebido": { "type": "string", "description": "Como os sujeitos percebem/tratam o pesquisador" },
+            "efeitos_da_presenca": { "type": "string", "description": "O que a presença do pesquisador altera" },
+            "dilemas_eticos": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "limites_do_acesso": { "type": "string", "description": "O que ficou inacessível e por quê" }
+          }
+        },
+        "vozes_do_campo": {
+          "type": "array",
+          "description": "Falas diretas dos sujeitos da pesquisa",
+          "items": {
+            "type": "object",
+            "properties": {
+              "quem": { "type": "string" },
+              "fala": { "type": "string" },
+              "contexto": { "type": "string" },
+              "uso_analitico": { "type": "string", "description": "Que argumento esta fala sustenta no texto" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

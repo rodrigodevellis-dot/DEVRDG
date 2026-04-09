@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Módulo: Narrativa",
+  "description": "Campos específicos para análise de estrutura narrativa — aplicável a romance, conto, crônica, reportagem narrativa, narrativa etnográfica, etc. Acoplável ao núcleo.",
+  "type": "object",
+  "properties": {
+    "narrativa": {
+      "type": "object",
+      "properties": {
+        "narrador": {
+          "type": "object",
+          "properties": {
+            "tipo": { "type": "string", "description": "Primeira pessoa, terceira onisciente, terceira limitada, múltiplo, não-confiável, etc." },
+            "posicao": { "type": "string", "description": "Dentro ou fora da história, grau de participação" },
+            "tom": { "type": "string", "description": "Irônico, lírico, distanciado, confessional, etc." },
+            "confiabilidade": { "type": "string", "description": "Há razões para duvidar do narrador? Quais?" }
+          }
+        },
+        "tempo": {
+          "type": "object",
+          "properties": {
+            "tempo_da_historia": { "type": "string", "description": "Quando os eventos narrados se passam" },
+            "tempo_da_narracao": { "type": "string", "description": "Quando/de onde se narra (se identificável)" },
+            "estrutura_temporal": { "type": "string", "description": "Linear, fragmentada, circular, anacrônica, etc." },
+            "recursos_temporais": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Flashbacks, antecipações, elipses, repetições, dilatações"
+            }
+          }
+        },
+        "espaco": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "lugar": { "type": "string" },
+              "tipo": { "type": "string", "description": "Físico, psicológico, social, simbólico" },
+              "funcao_narrativa": { "type": "string", "description": "O que este espaço produz na narrativa" },
+              "atmosfera": { "type": "string" }
+            }
+          }
+        },
+        "enredo": {
+          "type": "object",
+          "properties": {
+            "sinopse": { "type": "string", "description": "O que acontece, em poucas linhas" },
+            "conflito_central": { "type": "string" },
+            "pontos_de_virada": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "desfecho": { "type": "string" },
+            "tipo_desfecho": { "type": "string", "description": "Fechado, aberto, ambíguo, circular, epifânico" }
+          }
+        },
+        "temas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "tema": { "type": "string" },
+              "como_se_manifesta": { "type": "string", "description": "Através de que elementos narrativos o tema aparece" }
+            }
+          }
+        },
+        "intertextualidade": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "referencia": { "type": "string" },
+              "tipo": { "type": "string", "description": "Citação, alusão, paródia, pastiche, reescrita, epígrafe" },
+              "funcao": { "type": "string" }
+            }
+          }
+        },
+        "linguagem": {
+          "type": "object",
+          "properties": {
+            "registro_predominante": { "type": "string" },
+            "recursos_estilisticos": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Metáforas recorrentes, ironia, fluxo de consciência, oralidade, etc."
+            },
+            "relacao_forma_conteudo": { "type": "string", "description": "Como a forma do texto reforça ou tensiona o conteúdo" }
+          }
+        }
+      }
+    }
+  }
+}
