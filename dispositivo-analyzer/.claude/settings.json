@@ -1,0 +1,42 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/pre-edit-no-enum-for-taxonomy.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/post-edit-mypy-strict.sh"
+          }
+        ]
+      }
+    ],
+    "PreCommit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/pre-commit-require-citation.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "_notes": [
+    "PreToolUse hooks block tool calls when they exit with code 2.",
+    "PostToolUse hooks alert but do not block; they exit 0 or with warnings.",
+    "PreCommit hooks block commits when they exit non-zero.",
+    "All hook scripts must be executable: chmod +x .claude/hooks/*.sh"
+  ]
+}

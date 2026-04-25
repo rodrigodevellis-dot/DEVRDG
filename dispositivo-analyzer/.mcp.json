@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "postgres-dispositivo": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "${env:DATABASE_URL_READONLY}"
+      ],
+      "env": {
+        "DATABASE_URL_READONLY": "postgresql://dispositivo_ro:readonly@localhost:5432/dispositivo"
+      }
+    }
+  },
+  "_notes": [
+    "Use a read-only Postgres user (dispositivo_ro) for MCP connections.",
+    "For writes, use the application API, not the MCP server directly.",
+    "Create the read-only user with: CREATE USER dispositivo_ro WITH PASSWORD 'readonly'; GRANT CONNECT ON DATABASE dispositivo TO dispositivo_ro; GRANT USAGE ON SCHEMA public TO dispositivo_ro; GRANT SELECT ON ALL TABLES IN SCHEMA public TO dispositivo_ro; ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO dispositivo_ro;"
+  ]
+}
