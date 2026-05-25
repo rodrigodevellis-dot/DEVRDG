@@ -14,8 +14,8 @@ PROMPTS_DIR = Path(__file__).parent / "prompts"
 
 MAX_TOKENS = {
     1: 16000,
-    2: 8000,
-    3: 10000,
+    2: 16000,
+    3: 16000,
 }
 
 DEFAULT_MODEL = "claude-sonnet-4-6"
@@ -50,6 +50,11 @@ def call_claude(
                 ],
                 messages=[{"role": "user", "content": user_content}],
             )
+            if response.stop_reason == "max_tokens":
+                raise RuntimeError(
+                    f"Resposta truncada (max_tokens={max_tokens} atingido). "
+                    "Aumente o limite em MAX_TOKENS para este estágio."
+                )
             return response.content[0].text
         except anthropic.RateLimitError as e:
             last_error = e
@@ -57,6 +62,15 @@ def call_claude(
                 print(f"    Rate limit — aguardando {delay}s...")
                 time.sleep(delay)
                 delay *= 2
+        except anthropic.APIStatusError as e:
+            if e.status_code >= 500:
+                last_error = e
+                if attempt < retries:
+                    print(f"    Erro do servidor ({e.status_code}) — aguardando {delay}s...")
+                    time.sleep(delay)
+                    delay *= 2
+            else:
+                raise
         except anthropic.APIConnectionError as e:
             last_error = e
             if attempt < retries:
@@ -70,8 +84,13 @@ def parse_json(text: str) -> dict:
     text = text.strip()
     if text.startswith("```"):
         lines = text.splitlines()
+        # Find the closing fence anywhere in the remaining lines (not just last)
+        close = next(
+            (i for i in range(len(lines) - 1, 0, -1) if lines[i].strip() == "```"),
+            None,
+        )
         start = 1
-        end = len(lines) - 1 if lines[-1].strip() == "```" else len(lines)
+        end = close if close is not None else len(lines)
         text = "\n".join(lines[start:end])
     return json.loads(text)
 
@@ -241,10 +260,19 @@ Exemplos:
             if args.resume and out.exists():
                 print("  já existe, pulando")
             else:
-                s2_list = list(s2_map.values())
-                s1_list = [s1_map.get(a) or load_existing(output_dir / "stage1" / f"{a}.json")
-                           for a in s2_map]
-                s1_list = [s for s in s1_list if s is not None]
+                paired = [
+                    (s2_map[a], s1_map.get(a) or load_existing(output_dir / "stage1" / f"{a}.json"))
+                    for a in s2_map
+                ]
+                paired = [(s2, s1) for s2, s1 in paired if s1 is not None]
+                if not paired:
+                    print("  Estágio 3 ignorado: nenhum par DNA+metadata disponível.", file=sys.stderr)
+                    paired = []
+                elif len(paired) < len(s2_map):
+                    missing = len(s2_map) - len(paired)
+                    print(f"  Aviso: {missing} autor(es) sem stage1 JSON — excluídos da síntese.")
+                s2_list = [s2 for s2, _ in paired]
+                s1_list = [s1 for _, s1 in paired]
                 try:
                     result = stage3(client, prompts[3], s2_list, s1_list, args.model)
                     save_json(result, out)
