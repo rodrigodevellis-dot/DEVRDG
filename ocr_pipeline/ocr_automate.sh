@@ -146,12 +146,17 @@ cmd_setup() {
     fi
 
     log "Instalando bibliotecas Python..."
-    python3 -m pip install --upgrade --user \
-        google-cloud-documentai \
-        google-cloud-storage \
-        pdf2image \
-        ebooklib \
-        beautifulsoup4
+    if [[ -f "$SCRIPT_DIR/requirements.txt" ]]; then
+        python3 -m pip install --upgrade --user -r "$SCRIPT_DIR/requirements.txt"
+    else
+        python3 -m pip install --upgrade --user \
+            google-cloud-documentai \
+            google-cloud-storage \
+            pdf2image \
+            pypdf \
+            ebooklib \
+            beautifulsoup4
+    fi
 
     ok "Setup concluido"
 }
