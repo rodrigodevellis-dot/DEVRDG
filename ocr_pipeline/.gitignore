@@ -1,0 +1,9 @@
+.ocr_pipeline.env
+ocr_*/
+*.epub
+*.txt
+!requirements.txt
+!estrutura_exemplo.csv
+*.log
+__pycache__/
+*.pyc

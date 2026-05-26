@@ -1,0 +1,9 @@
+body { font-family: Georgia, "Times New Roman", serif; line-height: 1.55; margin: 1em; }
+h1, h2, h3 { font-family: "Helvetica Neue", Arial, sans-serif; line-height: 1.2; }
+h1 { font-size: 1.6em; margin-top: 1.2em; }
+h2 { font-size: 1.3em; margin-top: 1em; }
+h3 { font-size: 1.1em; }
+p  { text-align: justify; text-indent: 1.2em; margin: 0 0 .6em; }
+.page { margin: 1.2em 0 .2em; color: #888; font-size: .8em; }
+.pn   { display: block; border-bottom: 1px solid #ccc; padding-bottom: 2px; }
+em, i { font-style: italic; }
