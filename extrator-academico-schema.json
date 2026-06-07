@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Extração de Texto Acadêmico",
+  "description": "Schema para extração estruturada de textos acadêmicos visando produção, análise e descrição de fenômenos.",
+  "type": "object",
+  "required": ["metadados", "fenomeno", "contribuicao", "fundamentacao", "metodologia", "resultados"],
+  "properties": {
+    "metadados": {
+      "type": "object",
+      "properties": {
+        "titulo": { "type": "string" },
+        "autores": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "ano": { "type": "integer" },
+        "publicacao": { "type": "string", "description": "Revista, conferência ou editora" },
+        "doi": { "type": "string" },
+        "tipo": {
+          "type": "string",
+          "enum": ["artigo_empirico", "artigo_teorico", "revisao_literatura", "meta_analise", "capitulo_livro", "tese", "outro"]
+        },
+        "area": { "type": "string" },
+        "palavras_chave": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "fenomeno": {
+      "type": "object",
+      "description": "O fenômeno central investigado",
+      "properties": {
+        "nome": { "type": "string" },
+        "definicao_adotada": { "type": "string" },
+        "delimitacao": { "type": "string", "description": "Recorte específico que o autor faz do fenômeno" },
+        "fenomenos_relacionados": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "contribuicao": {
+      "type": "object",
+      "description": "O que este trabalho acrescenta ao campo",
+      "properties": {
+        "problema_pesquisa": { "type": "string" },
+        "objetivo": { "type": "string" },
+        "lacuna_identificada": { "type": "string", "description": "O que faltava na literatura que motivou o trabalho" },
+        "tese_argumento_central": { "type": "string" },
+        "tipo_contribuicao": {
+          "type": "string",
+          "enum": ["nova_teoria", "extensao_teoria", "evidencia_empirica", "revisao_critica", "novo_metodo", "nova_aplicacao", "refutacao"]
+        }
+      }
+    },
+    "fundamentacao": {
+      "type": "object",
+      "description": "Base teórica e conceitual",
+      "properties": {
+        "perspectiva_teorica": { "type": "string", "description": "Corrente ou escola de pensamento adotada" },
+        "conceitos_chave": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "conceito": { "type": "string" },
+              "definicao": { "type": "string" },
+              "fonte": { "type": "string", "description": "Autor(es) de referência para este conceito" }
+            }
+          }
+        },
+        "autores_base": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Autores mais citados ou que sustentam o argumento"
+        },
+        "perspectivas_rejeitadas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "perspectiva": { "type": "string" },
+              "motivo_rejeicao": { "type": "string" }
+            }
+          },
+          "description": "Abordagens que o autor explicitamente descarta e por quê"
+        }
+      }
+    },
+    "metodologia": {
+      "type": "object",
+      "properties": {
+        "abordagem": {
+          "type": "string",
+          "enum": ["qualitativa", "quantitativa", "mista", "teorica", "nao_se_aplica"]
+        },
+        "metodo": { "type": "string" },
+        "dados": { "type": "string", "description": "Tipo de dados, amostra, corpus" },
+        "contexto_empirico": { "type": "string", "description": "Onde/quando os dados foram coletados" }
+      }
+    },
+    "resultados": {
+      "type": "object",
+      "properties": {
+        "achados_principais": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "achados_secundarios": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "limitacoes_declaradas": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "agenda_futura": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "O que o autor sugere para pesquisas futuras"
+        }
+      }
+    },
+    "relacoes": {
+      "type": "object",
+      "description": "Como este trabalho se posiciona frente a outros",
+      "properties": {
+        "dialoga_com": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "referencia": { "type": "string" },
+              "tipo_relacao": {
+                "type": "string",
+                "enum": ["apoia", "estende", "contesta", "complementa", "aplica"]
+              },
+              "descricao": { "type": "string" }
+            }
+          }
+        },
+        "tensoes_debates": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Debates ou tensões do campo que o trabalho toca"
+        }
+      }
+    },
+    "citacoes_diretas_relevantes": {
+      "type": "array",
+      "description": "Trechos literais que valem preservar para citação direta",
+      "items": {
+        "type": "object",
+        "properties": {
+          "trecho": { "type": "string" },
+          "pagina": { "type": "string" },
+          "uso_sugerido": { "type": "string", "description": "Para que serve esta citação na sua produção" }
+        }
+      }
+    },
+    "avaliacao": {
+      "type": "object",
+      "description": "Avaliação crítica do texto",
+      "properties": {
+        "pontos_fortes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "pontos_fracos": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "relevancia_para_minha_pesquisa": { "type": "string" },
+        "nivel_relevancia": {
+          "type": "string",
+          "enum": ["central", "importante", "complementar", "marginal"]
+        }
+      }
+    }
+  }
+}

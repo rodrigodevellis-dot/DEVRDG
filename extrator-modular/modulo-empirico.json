@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Módulo: Texto Empírico",
+  "description": "Campos específicos para textos que coletam e analisam dados empíricos. Acoplável ao núcleo.",
+  "type": "object",
+  "properties": {
+    "empirico": {
+      "type": "object",
+      "properties": {
+        "problema_pesquisa": { "type": "string" },
+        "perguntas_hipoteses": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "desenho_metodologico": {
+          "type": "object",
+          "properties": {
+            "abordagem": {
+              "type": "string",
+              "enum": ["qualitativa", "quantitativa", "mista"]
+            },
+            "metodo": { "type": "string", "description": "Estudo de caso, etnografia, survey, experimento, análise de conteúdo, etc." },
+            "justificativa_metodologica": { "type": "string", "description": "Por que escolheu este método" }
+          }
+        },
+        "dados": {
+          "type": "object",
+          "properties": {
+            "tipo": { "type": "string", "description": "Entrevistas, documentos, questionários, observações, dados secundários, etc." },
+            "amostra": { "type": "string", "description": "Quem/o quê, quantos, como selecionados" },
+            "contexto": { "type": "string", "description": "Onde e quando os dados foram coletados" },
+            "periodo": { "type": "string" }
+          }
+        },
+        "analise": {
+          "type": "object",
+          "properties": {
+            "tecnica": { "type": "string", "description": "Como os dados foram analisados" },
+            "categorias": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Categorias ou temas que emergiram da análise"
+            }
+          }
+        },
+        "resultados": {
+          "type": "object",
+          "properties": {
+            "achados_principais": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "achados_inesperados": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Resultados que surpreenderam ou contradisseram expectativas"
+            },
+            "dados_brutos_relevantes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "dado": { "type": "string", "description": "Número, trecho de entrevista, observação concreta" },
+                  "significado": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "validade": {
+          "type": "object",
+          "properties": {
+            "limitacoes_declaradas": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "limitacoes_nao_declaradas": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Limitações que o pesquisador identifica mas o autor não mencionou"
+            },
+            "generalizabilidade": { "type": "string", "description": "Até onde os resultados podem ser generalizados" }
+          }
+        }
+      }
+    }
+  }
+}

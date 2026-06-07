@@ -1,0 +1,161 @@
+{
+  "curso": {
+    "codigo": 310,
+    "nome": "Ciências Sociais",
+    "curriculo": "20071",
+    "instituicao": "UFSC",
+    "coordenador": "Prof. Dr. Caetano Kayuna Sordi Barbará Dias",
+    "habilitacoes": ["Bacharelado", "Licenciatura"],
+    "eixos_formativos": ["Antropologia", "Ciência Política", "Sociologia"]
+  },
+  "bacharelado": {
+    "titulacao": "Bacharel em Ciências Sociais",
+    "carga_horaria": { "ufsc": "3060 H/A", "cne": "2550 H" },
+    "semestres": { "minimo": 8, "maximo": 16 },
+    "obrigatorias": "2628 H/A",
+    "optativas": "432 H/A"
+  },
+  "licenciatura": {
+    "titulacao": "Licenciado em Ciências Sociais",
+    "carga_horaria": { "ufsc": "3492 H/A", "cne": "2910 H" },
+    "semestres": { "minimo": 8, "maximo": 16 },
+    "obrigatorias": "3276 H/A",
+    "optativas": "216 H/A"
+  },
+  "nucleo_obrigatorio": {
+    "antropologia": [
+      { "codigo": "ANT7101", "nome": "Introdução à Antropologia", "h_a": 108, "semestre": 1 },
+      { "codigo": "ANT7201", "nome": "Teoria Antropológica I", "h_a": 108, "semestre": 2, "foco": "Funcionalismo, estrutural-funcionalismo britânico, culturalismo norte-americano" },
+      { "codigo": "ANT7301", "nome": "Teoria Antropológica II", "h_a": 72, "semestre": 3, "foco": "Escola sociológica francesa, estruturalismo" },
+      { "codigo": "ANT7401", "nome": "Teoria Antropológica III", "h_a": 108, "semestre": 4, "foco": "Pós-guerra, antropologias processuais, históricas, interpretativas, simbólicas" },
+      { "codigo": "ANT7701", "nome": "Estudos Afro-Brasileiros", "h_a": 72, "semestre": 7 }
+    ],
+    "sociologia": [
+      { "codigo": "SPO7103", "nome": "Introdução à Sociologia", "h_a": 108, "semestre": 1 },
+      { "codigo": "SPO7203", "nome": "Teoria Sociológica I", "h_a": 108, "semestre": 2, "foco": "Durkheim, Marx" },
+      { "codigo": "SPO7303", "nome": "Teoria Sociológica II", "h_a": 72, "semestre": 3, "foco": "Weber, Merton, Parsons" },
+      { "codigo": "SPO7403", "nome": "Teoria Sociológica III", "h_a": 108, "semestre": 4, "foco": "Bourdieu, Frankfurt, Foucault, Latour, Ianni" }
+    ],
+    "ciencia_politica": [
+      { "codigo": "SPO7102", "nome": "Introdução à Ciência Política", "h_a": 108, "semestre": 1 },
+      { "codigo": "SPO7202", "nome": "Teoria Política I", "h_a": 108, "semestre": 2, "foco": "Maquiavel, contratualismo, federalistas" },
+      { "codigo": "SPO7302", "nome": "Teoria Política II", "h_a": 72, "semestre": 3, "foco": "Liberalismo, anarquismo, marxismo, elitismo" },
+      { "codigo": "SPO7402", "nome": "Teoria Política III", "h_a": 108, "semestre": 4, "foco": "Pluralismo, neomarxismo, neoliberalismo, neoinstitucionalismo" }
+    ],
+    "metodologia": [
+      { "codigo": "FIL7101", "nome": "Fundamentos Filosóficos de Pesquisa Científica", "h_a": 72, "semestre": 2 },
+      { "codigo": "CSO7304", "nome": "Epistemologia das Ciências Sociais", "h_a": 108, "semestre": 3 },
+      { "codigo": "CSO7506", "nome": "Métodos e Técnicas de Pesquisa I", "h_a": 108, "semestre": 5 },
+      { "codigo": "CSO7606", "nome": "Método e Técnica de Pesquisa II", "h_a": 108, "semestre": 6, "foco": "Etnografia, trabalho de campo, observação participante" },
+      { "codigo": "INE5127", "nome": "Estatística Aplicada a Ciências Sociais", "h_a": 72, "semestre": 6 },
+      { "codigo": "CSO7205", "nome": "Prática de Pesquisa I", "h_a": 36, "semestre": 2 },
+      { "codigo": "CSO7505", "nome": "Prática de Pesquisa II", "h_a": 36, "semestre": 5 }
+    ],
+    "transversais": [
+      { "codigo": "LLV7801", "nome": "Produção Textual Acadêmica", "h_a": 72, "semestre": 1 },
+      { "codigo": "HST7402", "nome": "História Contemporânea I", "h_a": 72, "semestre": 3 },
+      { "codigo": "CSO7504", "nome": "Pensamento Social Brasileiro", "h_a": 108, "semestre": 5 }
+    ]
+  },
+  "optativas_por_campo_tematico": {
+    "etnologia_e_alteridade": [
+      { "codigo": "ANT7004", "nome": "Etnologia Indígena" },
+      { "codigo": "ANT7003", "nome": "Relações Inter-étnicas" },
+      { "codigo": "ANT7202", "nome": "Introdução à Etnografia" },
+      { "codigo": "ANT7203", "nome": "Leituras Etnográficas I", "foco": "Funcionalismo, cultural-historicismo" },
+      { "codigo": "ANT7204", "nome": "Leituras Etnográficas II", "foco": "Escola francesa, estruturalismo" },
+      { "codigo": "ANT7211", "nome": "Leituras Etnográficas III", "foco": "Pós-guerra, escrita etnográfica, reflexividade" }
+    ],
+    "corpo_pessoa_sujeito": [
+      { "codigo": "ANT7016", "nome": "Indivíduo e Sociedade" },
+      { "codigo": "ANT7023", "nome": "Pessoa e Corporalidade" },
+      { "codigo": "ANT7052", "nome": "Antropologia da Pessoa e Teorias do Sujeito" }
+    ],
+    "genero_sexualidade_feminismo": [
+      { "codigo": "ANT7002", "nome": "Relações de Gênero" },
+      { "codigo": "ANT7020", "nome": "Família e Parentesco em Sociedades Complexas" },
+      { "codigo": "ANT7050", "nome": "Gênero e Sexualidade" },
+      { "codigo": "ANT7051", "nome": "Antropologia e Feminismo" }
+    ],
+    "simbolico_ritual_religiao": [
+      { "codigo": "ANT7053", "nome": "Antropologia da Religião" },
+      { "codigo": "ANT7059", "nome": "Mito, Rito e Cosmologia" },
+      { "codigo": "ANT7063", "nome": "Antropologia Simbólica" },
+      { "codigo": "ANT7067", "nome": "Do Rito à Performance" }
+    ],
+    "arte_imagem_musica": [
+      { "codigo": "ANT7008", "nome": "Antropologia Visual" },
+      { "codigo": "ANT7013", "nome": "Etnomusicologia" },
+      { "codigo": "ANT7014", "nome": "Antropologia da Arte" },
+      { "codigo": "ANT7060", "nome": "Representação e Imagem" },
+      { "codigo": "ANT7062", "nome": "Antropologia dos Objetos" }
+    ],
+    "urbano_rural_espaco": [
+      { "codigo": "ANT7006", "nome": "Antropologia Urbana" },
+      { "codigo": "ANT7007", "nome": "Antropologia do Mundo Rural" },
+      { "codigo": "SPO7038", "nome": "Sociologia Urbana" },
+      { "codigo": "SPO7039", "nome": "Sociologia Rural" }
+    ],
+    "cultura_midia_globalizacao": [
+      { "codigo": "ANT7001", "nome": "Cultura Brasileira" },
+      { "codigo": "ANT7010", "nome": "Antropologia da Mídia" },
+      { "codigo": "ANT7012", "nome": "Globalização Cultural" }
+    ],
+    "violencia_conflito_direitos": [
+      { "codigo": "ANT7024", "nome": "Violência e Conflitos" },
+      { "codigo": "ANT7015", "nome": "Antropologia das Minorias" },
+      { "codigo": "ANT7068", "nome": "Identidades e Diversidade" }
+    ],
+    "saude_alimentacao_ambiente": [
+      { "codigo": "ANT7009", "nome": "Antropologia da Alimentação" },
+      { "codigo": "ANT7066", "nome": "Antropologia da Saúde" },
+      { "codigo": "ANT7017", "nome": "Cultura e Meio Ambiente" },
+      { "codigo": "SPO7045", "nome": "Ciências Sociais e Saúde" },
+      { "codigo": "SPO7073", "nome": "Ecologia Política" }
+    ],
+    "ciencia_tecnologia_linguagem": [
+      { "codigo": "ANT7054", "nome": "Antropologia da Ciência e da Tecnologia" },
+      { "codigo": "ANT7058", "nome": "Antropologia e Linguagem" }
+    ],
+    "parentesco_organizacao_social": [
+      { "codigo": "ANT7005", "nome": "Organização Social e Parentesco" },
+      { "codigo": "ANT7020", "nome": "Família e Parentesco em Sociedades Complexas" }
+    ],
+    "politica_estado_poder": [
+      { "codigo": "ANT7019", "nome": "Antropologia da Política" },
+      { "codigo": "SPO7065", "nome": "Instituições e Comportamento Político no Brasil" },
+      { "codigo": "SPO7066", "nome": "Pensamento Político Brasileiro" },
+      { "codigo": "SPO7067", "nome": "Política Brasileira: Teoria e História" },
+      { "codigo": "SPO7068", "nome": "Política e Cultura" },
+      { "codigo": "SPO7071", "nome": "Estado e Políticas Públicas" },
+      { "codigo": "SPO7072", "nome": "Análise e Avaliação de Políticas Públicas" },
+      { "codigo": "SPO7074", "nome": "Estados, Partidos Políticos e Movimentos Sociais" },
+      { "codigo": "SPO7064", "nome": "Relações Internacionais no Século XXI" }
+    ],
+    "trabalho_economia_organizacoes": [
+      { "codigo": "SPO7040", "nome": "Sociologia do Trabalho" },
+      { "codigo": "SPO7041", "nome": "Sociologia das Organizações" },
+      { "codigo": "SPO7042", "nome": "Sociologia do Desenvolvimento" },
+      { "codigo": "SPO7046", "nome": "Sociologia Econômica" },
+      { "codigo": "SPO7047", "nome": "Ciências Sociais e Sistema Financeiro" },
+      { "codigo": "ANT7065", "nome": "Introdução à Antropologia Econômica" }
+    ],
+    "educacao_juventude": [
+      { "codigo": "ANT7022", "nome": "Antropologia da Educação" },
+      { "codigo": "SPO7049", "nome": "Sociologia da Juventude" },
+      { "codigo": "SPO7603", "nome": "Sociologia da Educação" }
+    ],
+    "historia_antropologica_pensamento_brasileiro": [
+      { "codigo": "ANT7018", "nome": "Antropologia e História" },
+      { "codigo": "ANT7021", "nome": "Antropologia Brasileira" },
+      { "codigo": "SPO7051", "nome": "Sociologia Brasileira" },
+      { "codigo": "SPO7052", "nome": "Teoria Social Marxista" }
+    ],
+    "metodologia_avancada": [
+      { "codigo": "SPO7048", "nome": "Práticas e Intervenções Sociológicas" },
+      { "codigo": "SPO7050", "nome": "Laboratório de Observação Social" },
+      { "codigo": "SPO7069", "nome": "Abordagens e Problemas Contemporâneos na Ciência Política" },
+      { "codigo": "SPO7070", "nome": "Teoria e Método na História das Ideias Políticas" }
+    ]
+  }
+}

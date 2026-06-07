@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Módulo: Poético/Lírico",
+  "description": "Campos específicos para análise de poesia e textos líricos. Captura forma, imagem, ritmo, voz e a relação entre som e sentido. Acoplável ao núcleo.",
+  "type": "object",
+  "properties": {
+    "poetico": {
+      "type": "object",
+      "properties": {
+        "forma": {
+          "type": "object",
+          "properties": {
+            "tipo_composicao": { "type": "string", "description": "Soneto, verso livre, prosa poética, haiku, cordel, etc." },
+            "estrutura": { "type": "string", "description": "Número de estrofes, versos por estrofe, organização visual" },
+            "metro": { "type": "string", "description": "Metrificação (se houver): alexandrino, decassílabo, livre, etc." },
+            "rima": { "type": "string", "description": "Esquema de rima (ABAB, ABBA, livre, etc.) e tipos" },
+            "forma_como_sentido": { "type": "string", "description": "Como a disposição visual/formal produz significado" }
+          }
+        },
+        "sonoridade": {
+          "type": "object",
+          "properties": {
+            "ritmo": { "type": "string", "description": "Cadência, pausas, acelerações" },
+            "recursos_fonicos": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Aliteração, assonância, onomatopeia, paronomásia, etc."
+            },
+            "relacao_som_sentido": { "type": "string", "description": "Como o som reforça ou tensiona o significado" }
+          }
+        },
+        "imagens": {
+          "type": "array",
+          "description": "Imagens poéticas centrais",
+          "items": {
+            "type": "object",
+            "properties": {
+              "imagem": { "type": "string" },
+              "tipo": { "type": "string", "description": "Metáfora, metonímia, sinestesia, símbolo, alegoria" },
+              "campo_semantico": { "type": "string" },
+              "efeito": { "type": "string" }
+            }
+          }
+        },
+        "eu_lirico": {
+          "type": "object",
+          "description": "A voz que fala no poema",
+          "properties": {
+            "caracterizacao": { "type": "string", "description": "Quem é ou como se apresenta o eu lírico" },
+            "posicao_enunciativa": { "type": "string", "description": "De onde fala: memória, contemplação, súplica, denúncia, etc." },
+            "interlocutor": { "type": "string", "description": "A quem se dirige (se houver)" },
+            "tom_emocional": { "type": "string" },
+            "deslocamentos": { "type": "string", "description": "Mudanças de voz, tom ou posição ao longo do poema" }
+          }
+        },
+        "tematica": {
+          "type": "object",
+          "properties": {
+            "temas": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "tensoes": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Oposições que estruturam o poema (vida/morte, presença/ausência, etc.)"
+            },
+            "nao_dito": { "type": "string", "description": "O que o poema evita dizer ou deixa em silêncio" }
+          }
+        },
+        "contexto_poetico": {
+          "type": "object",
+          "properties": {
+            "movimento_geracao": { "type": "string", "description": "Movimento literário ou geração poética" },
+            "dialogo_com_tradicao": { "type": "string", "description": "Como se posiciona frente à tradição poética" },
+            "projeto_poetico": { "type": "string", "description": "Se inserido em obra maior, qual o projeto do autor" }
+          }
+        }
+      }
+    }
+  }
+}

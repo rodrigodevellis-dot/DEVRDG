@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Módulo: Autoetnográfico / Autobiográfico",
+  "description": "Campos específicos para textos em que o autor é simultaneamente sujeito e pesquisador. Captura reflexividade, posicionalidade, vulnerabilidade e a construção do eu como dado. Acoplável ao núcleo.",
+  "type": "object",
+  "properties": {
+    "autoetnografico": {
+      "type": "object",
+      "properties": {
+        "posicionalidade": {
+          "type": "object",
+          "description": "De onde o autor fala — as posições sociais que informam a escrita",
+          "properties": {
+            "marcadores_declarados": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Posições que o autor explicita: gênero, raça, classe, origem, formação, etc."
+            },
+            "marcadores_implicitos": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Posições que se inferem mas não são explicitadas"
+            },
+            "como_posicionalidade_afeta_analise": { "type": "string" }
+          }
+        },
+        "experiencia_narrada": {
+          "type": "array",
+          "description": "As experiências pessoais que funcionam como dado",
+          "items": {
+            "type": "object",
+            "properties": {
+              "experiencia": { "type": "string" },
+              "contexto": { "type": "string" },
+              "emocoes_registradas": { "type": "array", "items": { "type": "string" } },
+              "uso_analitico": { "type": "string", "description": "Que argumento ou insight esta experiência sustenta" },
+              "grau_vulnerabilidade": {
+                "type": "string",
+                "description": "Quão exposto o autor se coloca: descritivo, reflexivo, vulnerável, radicalmente exposto"
+              }
+            }
+          }
+        },
+        "movimento_eu_nos": {
+          "type": "object",
+          "description": "Como o texto transita entre o pessoal e o coletivo/estrutural",
+          "properties": {
+            "do_pessoal_ao_cultural": { "type": "string", "description": "Como a experiência individual ilumina algo coletivo" },
+            "do_cultural_ao_pessoal": { "type": "string", "description": "Como o coletivo se inscreve no corpo/experiência do autor" },
+            "tensoes_nesse_transito": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "estrategias_de_escrita": {
+          "type": "object",
+          "properties": {
+            "voz": { "type": "string", "description": "Como o autor constrói sua voz: confessional, analítica, poética, fragmentada, etc." },
+            "temporalidade": { "type": "string", "description": "Como organiza o tempo da experiência" },
+            "recursos_narrativos": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Diálogos reconstruídos, cenas, fragmentos, cartas, etc."
+            },
+            "relacao_com_leitor": { "type": "string", "description": "Convida, confronta, inclui, distancia" }
+          }
+        },
+        "etica_da_autoexposicao": {
+          "type": "object",
+          "properties": {
+            "outros_envolvidos": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Outras pessoas cuja vida é exposta junto com a do autor"
+            },
+            "estrategias_de_protecao": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Anonimização, omissão, ficionalização de outros"
+            },
+            "dilemas_explicitos": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "legitimacao": {
+          "type": "object",
+          "description": "Como o texto justifica o uso do eu como dado válido",
+          "properties": {
+            "justificativa_epistemologica": { "type": "string" },
+            "criterios_de_validade": { "type": "string", "description": "Que critérios o autor usa para validar o trabalho (ressonância, verossimilhança, utilidade, etc.)" },
+            "autores_metodologicos": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Quem o autor cita para justificar a abordagem autoetnográfica"
+            }
+          }
+        }
+      }
+    }
+  }
+}

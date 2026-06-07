@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Módulo: Personagens Literários",
+  "description": "Campos específicos para estudo de personagens em textos literários. Acoplável ao núcleo.",
+  "type": "object",
+  "properties": {
+    "personagens": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nome": { "type": "string" },
+          "funcao_narrativa": {
+            "type": "string",
+            "description": "Protagonista, antagonista, coadjuvante, narrador, figurante significativo, etc."
+          },
+          "caracterizacao": {
+            "type": "object",
+            "properties": {
+              "direta": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Como o narrador ou outros personagens o descrevem explicitamente"
+              },
+              "indireta": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "O que se infere de suas ações, falas, escolhas"
+              },
+              "marcadores_sociais": {
+                "type": "object",
+                "properties": {
+                  "classe": { "type": "string" },
+                  "genero": { "type": "string" },
+                  "raca_etnia": { "type": "string" },
+                  "idade": { "type": "string" },
+                  "ocupacao": { "type": "string" },
+                  "outros": { "type": "array", "items": { "type": "string" } }
+                }
+              }
+            }
+          },
+          "voz": {
+            "type": "object",
+            "description": "Como o personagem fala e se expressa",
+            "properties": {
+              "registro_linguistico": { "type": "string", "description": "Formal, coloquial, dialetal, erudito, etc." },
+              "marcas_discursivas": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Expressões recorrentes, modo de argumentar, silêncios"
+              },
+              "exemplos": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Falas representativas do personagem"
+              }
+            }
+          },
+          "arco": {
+            "type": "object",
+            "description": "Transformação do personagem ao longo da narrativa",
+            "properties": {
+              "estado_inicial": { "type": "string" },
+              "eventos_transformadores": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "estado_final": { "type": "string" },
+              "tipo_arco": {
+                "type": "string",
+                "description": "Ascensão, queda, revelação, estagnação, circular, etc."
+              }
+            }
+          },
+          "relacoes": {
+            "type": "array",
+            "description": "Relações com outros personagens",
+            "items": {
+              "type": "object",
+              "properties": {
+                "com_quem": { "type": "string" },
+                "tipo": { "type": "string", "description": "Aliança, conflito, dependência, espelhamento, etc." },
+                "dinamica": { "type": "string", "description": "Como a relação funciona e/ou muda" }
+              }
+            }
+          },
+          "espacos": {
+            "type": "array",
+            "description": "Espaços associados ao personagem e seu significado",
+            "items": {
+              "type": "object",
+              "properties": {
+                "espaco": { "type": "string" },
+                "significado": { "type": "string" }
+              }
+            }
+          },
+          "temas_encarnados": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Temas ou questões que o personagem materializa na narrativa"
+          },
+          "intertextualidade": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "referencia": { "type": "string" },
+                "tipo": { "type": "string", "description": "Alusão, paródia, reescrita, arquétipo, etc." }
+              }
+            },
+            "description": "Diálogos com personagens ou figuras de outras obras"
+          }
+        }
+      }
+    },
+    "sistema_de_personagens": {
+      "type": "object",
+      "description": "Visão do conjunto — como os personagens funcionam como sistema",
+      "properties": {
+        "eixos_de_oposicao": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Pares ou grupos de personagens que se opõem ou espelham"
+        },
+        "hierarquia_narrativa": { "type": "string", "description": "Como o texto distribui atenção e voz entre personagens" },
+        "ausencias_significativas": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Tipos de personagem ausentes que seriam esperáveis no contexto"
+        }
+      }
+    }
+  }
+}

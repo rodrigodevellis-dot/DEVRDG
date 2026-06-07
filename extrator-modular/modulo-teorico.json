@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Módulo: Texto Teórico-Acadêmico",
+  "description": "Campos específicos para textos que produzem, discutem ou revisam teoria. Acoplável ao núcleo.",
+  "type": "object",
+  "properties": {
+    "teorico": {
+      "type": "object",
+      "properties": {
+        "perspectiva_epistemologica": {
+          "type": "string",
+          "description": "Posição epistemológica do autor: positivista, interpretativista, crítica, pragmatista, pós-estruturalista, etc."
+        },
+        "tradicao_teorica": {
+          "type": "string",
+          "description": "Escola ou tradição de pensamento em que o trabalho se inscreve"
+        },
+        "contribuicao_teorica": {
+          "type": "object",
+          "properties": {
+            "tipo": {
+              "type": "string",
+              "enum": ["nova_teoria", "extensao", "revisao_critica", "sintese", "refutacao", "traducao_entre_campos"]
+            },
+            "descricao": { "type": "string" },
+            "lacuna_que_preenche": { "type": "string" }
+          }
+        },
+        "debate_no_campo": {
+          "type": "object",
+          "description": "Como o texto se posiciona nos debates do campo",
+          "properties": {
+            "debate": { "type": "string", "description": "Qual é o debate" },
+            "posicao_do_autor": { "type": "string" },
+            "posicoes_adversarias": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "posicao": { "type": "string" },
+                  "representantes": { "type": "array", "items": { "type": "string" } },
+                  "critica_do_autor": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "genealogia_conceitual": {
+          "type": "array",
+          "description": "Origem e evolução dos conceitos-chave no texto",
+          "items": {
+            "type": "object",
+            "properties": {
+              "conceito": { "type": "string" },
+              "origem": { "type": "string", "description": "Quem cunhou ou onde surgiu" },
+              "transformacoes": { "type": "string", "description": "Como o conceito mudou até chegar ao uso do autor" }
+            }
+          }
+        },
+        "implicacoes": {
+          "type": "object",
+          "properties": {
+            "para_teoria": { "type": "string" },
+            "para_pratica": { "type": "string" },
+            "para_pesquisa_futura": { "type": "string" }
+          }
+        },
+        "agenda_futura": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "O que o autor sugere investigar a partir daqui"
+        }
+      }
+    }
+  }
+}
